@@ -1,0 +1,21 @@
+# Public Supabase configuration (safe for client use)
+VITE_SUPABASE_URL=https://YOUR_PROJECT_REF.supabase.co
+VITE_SUPABASE_PUBLISHABLE_KEY=sb_publishable_REPLACE_ME
+SUPABASE_URL=https://YOUR_PROJECT_REF.supabase.co
+SUPABASE_PUBLISHABLE_KEY=sb_publishable_REPLACE_ME
+
+# Shopify public browser values belong in .env for Vite local development:
+# VITE_SHOPIFY_STORE_DOMAIN=gxgjyr-m9.myshopify.com
+# VITE_SHOPIFY_STOREFRONT_API_TOKEN=REPLACE_WITH_PUBLIC_TOKEN
+
+# Shopify server-only settings for Wrangler/local Worker execution.
+SHOPIFY_STORE_DOMAIN=gxgjyr-m9.myshopify.com
+SHOPIFY_PRIVILEGED_PROXY_ENABLED=0
+PRIVATE_STOREFRONT_API_TOKEN=REPLACE_ME_ONLY_IF_PROXY_IS_ENABLED
+
+# Server-only secrets — never commit real values
+SUPABASE_SERVICE_ROLE_KEY=REPLACE_ME
+PAYMENT_PROVIDER=moyasar
+MOYASAR_PUBLISHABLE_KEY=REPLACE_ME
+MOYASAR_SECRET_KEY=REPLACE_ME
+MOYASAR_WEBHOOK_SECRET=REPLACE_ME

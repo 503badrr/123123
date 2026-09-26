@@ -1,0 +1,96 @@
+name: NodeJS Quality Gate
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: ["main"]
+  push:
+    branches: ["main"]
+
+jobs:
+  quality:
+    name: Typecheck, lint, test, build, and Cloudflare dry-run with Node 22
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 22.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: npm
+
+      - name: Install locked dependencies
+        run: npm ci
+
+      - name: Capture typecheck
+        id: typecheck
+        shell: bash
+        run: |
+          set +e
+          npm run typecheck > typecheck.log 2>&1
+          status=$?
+          cat typecheck.log
+          echo "status=$status" >> "$GITHUB_OUTPUT"
+          exit 0
+
+      - name: Upload typecheck diagnostics
+        if: steps.typecheck.outputs.status != '0'
+        uses: actions/upload-artifact@v4
+        with:
+          name: typecheck-diagnostics
+          path: typecheck.log
+          retention-days: 7
+
+      - name: Enforce typecheck
+        if: steps.typecheck.outputs.status != '0'
+        run: exit 1
+
+      - name: Capture lint
+        id: lint
+        shell: bash
+        run: |
+          set +e
+          npm run lint > lint.log 2>&1
+          status=$?
+          cat lint.log
+          echo "status=$status" >> "$GITHUB_OUTPUT"
+          exit 0
+
+      - name: Upload lint diagnostics
+        if: steps.lint.outputs.status != '0'
+        uses: actions/upload-artifact@v4
+        with:
+          name: lint-diagnostics
+          path: lint.log
+          retention-days: 7
+
+      - name: Enforce lint
+        if: steps.lint.outputs.status != '0'
+        run: exit 1
+
+      - name: Run tests
+        run: npm run test
+
+      - name: Production build
+        run: npm run build
+        env:
+          PAYMENT_PROVIDER: tap
+          VITE_PUBLIC_SITE_URL: https://swwiitch.com
+          VITE_PUBLIC_API_URL: https://swwiitch.com/api
+          VITE_SUPPORT_EMAIL: support@swwiitch.com
+          VITE_SUPABASE_URL: ""
+          VITE_SUPABASE_PUBLISHABLE_KEY: ""
+          VITE_SHOPIFY_STORE_DOMAIN: gxgjyr-m9.myshopify.com
+          VITE_SHOPIFY_STOREFRONT_API_TOKEN: ci-public-storefront-token
+          SHOPIFY_STORE_DOMAIN: gxgjyr-m9.myshopify.com
+          SHOPIFY_PRIVILEGED_PROXY_ENABLED: "0"
+
+      - name: Validate Cloudflare production deployment bundle
+        run: npx --yes wrangler@4.118.0 deploy --dry-run
+
+      - name: Validate Cloudflare preview version bundle
+        run: npx --yes wrangler@4.118.0 versions upload --dry-run

@@ -1,0 +1,116 @@
+{
+  "schema_version": 1,
+  "release_id": "switch-unified-2026-08-03",
+  "status": "merged_requires_manual_gates",
+  "created_at": "2026-08-03T09:43:00Z",
+  "updated_at": "2026-08-03T10:12:00Z",
+  "branch": "main",
+  "coordinator": {
+    "repository": "503badrr/cosmic-switch-preview",
+    "base_main_commit": "fe63822f1061f2977c3157a9a3f386e40ade3538",
+    "verified_branch_commit": "1df8caf3a2b414d4654da647738049276d04204a",
+    "main_merge_commit": "4287b667139e92ea7c2e34348ec9db39ce9c87be",
+    "pull_request": 32,
+    "canonical_source": "github_main",
+    "lovable_project_id": "75f64944-3d13-4e3b-b4db-e91543484ea8",
+    "lovable_synced_to_audited_base": true
+  },
+  "domain": {
+    "primary": "https://swwiitch.com",
+    "www": "https://www.swwiitch.com",
+    "confirmed": true
+  },
+  "components": {
+    "storefront": {
+      "repository": "503badrr/cosmic-switch-preview",
+      "branch": "main",
+      "pull_request": 32,
+      "state": "merged",
+      "role": "storefront_checkout_admin_cloudflare_worker",
+      "deployment_target": "dark-disk-4155"
+    },
+    "r2_explorer": {
+      "repository": "503badrr/r2-explorer-template",
+      "pull_request": 2,
+      "commit": "52dfc38d9acc0d81433245c505853548be2bf085",
+      "state": "draft_not_merged",
+      "role": "private_read_only_r2_operations"
+    },
+    "cloudflare_mcp": {
+      "repository": "503badrr/mcp-server-cloudflare",
+      "commit": "0ffd90f581cb4c52e3dc0bd23c85136364517a46",
+      "selected_app": "apps/workers-observability",
+      "state": "quality_release_merged_not_deployed",
+      "role": "workers_logs_metrics_and_release_support"
+    }
+  },
+  "database": {
+    "production_project_ref": "slnjgmwckknzwjcmlolj",
+    "applied_migrations": [
+      {
+        "version": "20260803094951",
+        "name": "repair_admin_rls_and_webhook_indexes",
+        "repository_file": "supabase/migrations/20260801205033_repair_admin_rls_and_webhook_indexes.sql"
+      },
+      {
+        "version": "20260803095419",
+        "name": "harden_admin_predicate_api_surface",
+        "repository_file": "supabase/migrations/20260803130000_harden_admin_predicate_api_surface.sql"
+      },
+      {
+        "version": "20260803095711",
+        "name": "document_server_only_rls",
+        "repository_file": "supabase/migrations/20260803131500_document_server_only_rls.sql"
+      }
+    ],
+    "assertions": {
+      "unified_release_rls": "passed",
+      "admin_predicate_api_surface": "passed",
+      "server_only_rls": "passed"
+    },
+    "performance_advisor": {
+      "duplicate_index_warning": "cleared",
+      "unused_index_info": "retained_pending_production_usage_data"
+    },
+    "security_advisor": {
+      "server_only_no_policy_info": "cleared",
+      "accepted_findings_documented": true,
+      "leaked_password_protection": "manual_enable_required"
+    }
+  },
+  "verification": {
+    "environment_examples_present": true,
+    "deployment_runbook_present": true,
+    "security_runbook_present": true,
+    "operations_runbook_present": true,
+    "node_quality_gate_present": true,
+    "branch_quality_gate": {
+      "status": "passed",
+      "run_number": 245,
+      "verified_commit": "1df8caf3a2b414d4654da647738049276d04204a"
+    },
+    "cloudflare_dry_runs": {
+      "production": "passed",
+      "preview": "passed"
+    },
+    "main_merge": "passed",
+    "manual_visual_check": "pending_global_launch",
+    "tap_production_webhook_test": "pending_manual",
+    "admin_codes_csv_test": "pending_manual"
+  },
+  "blockers": [
+    "Complete mobile and desktop preview checks before final public launch.",
+    "Enable Supabase leaked-password protection in Auth settings.",
+    "Verify Tap production secrets and a signed webhook without delivering a real code prematurely.",
+    "Verify DNS and SSL for swwiitch.com and www.swwiitch.com after deployment.",
+    "Configure Cloudflare Access and both R2 buckets before merging R2 Explorer PR #2.",
+    "Provision Switch-owned Cloudflare resources and OAuth secrets before deploying the MCP component.",
+    "Remove or disable the obsolete Vercel GitHub integration to stop non-authoritative failed checks."
+  ],
+  "deployment": {
+    "merged_to_main": true,
+    "database_changed": true,
+    "cloudflare_deployment_observation": "pending",
+    "dns_changed": false
+  }
+}

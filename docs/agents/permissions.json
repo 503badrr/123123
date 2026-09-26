@@ -1,0 +1,103 @@
+{
+  "version": 1,
+  "defaults": {
+    "mode": "read_only",
+    "secrets": "deny",
+    "production_writes": "deny",
+    "merge": "explicit_owner_approval",
+    "deploy": "explicit_owner_approval"
+  },
+  "agents": {
+    "orchestrator": {
+      "read": [
+        "github",
+        "supabase",
+        "commerce_status"
+      ],
+      "write": []
+    },
+    "code": {
+      "read": [
+        "github"
+      ],
+      "write": [
+        "feature_branch",
+        "pull_request"
+      ],
+      "deny": [
+        "merge",
+        "production_deploy"
+      ]
+    },
+    "security": {
+      "read": [
+        "github",
+        "supabase_advisors",
+        "migrations"
+      ],
+      "write": [
+        "feature_branch"
+      ],
+      "deny": [
+        "secrets_readback",
+        "production_ddl"
+      ]
+    },
+    "database": {
+      "read": [
+        "supabase_schema",
+        "migrations"
+      ],
+      "write": [
+        "reviewed_migration"
+      ],
+      "deny": [
+        "destructive_production_sql"
+      ]
+    },
+    "commerce": {
+      "read": [
+        "zid",
+        "salla",
+        "shopify"
+      ],
+      "write": [
+        "dry_run"
+      ],
+      "deny": [
+        "live_write",
+        "publish",
+        "price_change",
+        "fulfillment"
+      ]
+    },
+    "release": {
+      "read": [
+        "ci",
+        "supabase_advisors",
+        "deployment",
+        "health",
+        "payment_tests"
+      ],
+      "write": [],
+      "deny": [
+        "merge",
+        "deploy"
+      ]
+    },
+    "creative": {
+      "read": [
+        "approved_catalog"
+      ],
+      "write": [
+        "draft_media"
+      ],
+      "deny": [
+        "orders",
+        "payments",
+        "customer_data",
+        "database"
+      ]
+    }
+  }
+}

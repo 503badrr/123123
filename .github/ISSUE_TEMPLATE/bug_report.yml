@@ -1,0 +1,87 @@
+name: "🐛 تقرير خطأ — Bug Report"
+description: أبلغ عن خطأ أو مشكلة في التطبيق
+title: "[Bug]: "
+labels: ["bug", "needs-triage"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        شكرًا لمساعدتنا في تحسين Switch! يرجى ملء النموذج أدناه بأكبر قدر ممكن من التفاصيل.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: وصف المشكلة
+      description: وصف واضح ومختصر للخطأ.
+      placeholder: "عند الضغط على زر X، يحدث Y بدلاً من Z..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: خطوات إعادة الإنتاج
+      description: الخطوات الدقيقة لإعادة تجربة المشكلة.
+      placeholder: |
+        1. افتح صفحة '...'
+        2. اضغط على '...'
+        3. قم بـ '...'
+        4. لاحظ الخطأ
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: السلوك المتوقع
+      description: ماذا كنت تتوقع أن يحدث؟
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: السلوك الفعلي
+      description: ماذا حدث فعلاً؟
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: لقطات الشاشة أو الفيديو
+      description: إن وجدت، أضف لقطات شاشة أو تسجيلات توضح المشكلة.
+
+  - type: dropdown
+    id: browser
+    attributes:
+      label: المتصفح
+      multiple: true
+      options:
+        - Chrome
+        - Firefox
+        - Safari
+        - Edge
+        - متصفح آخر
+
+  - type: input
+    id: os
+    attributes:
+      label: نظام التشغيل
+      placeholder: "مثال: Windows 11, macOS 15, iOS 18"
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: درجة الخطورة
+      options:
+        - منخفضة — تأثير بسيط
+        - متوسطة — تؤثر على الاستخدام
+        - عالية — تمنع إتمام طلب
+        - حرجة — انهيار كامل
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: معلومات إضافية
+      description: أي تفاصيل أخرى مفيدة (console logs, network errors...).

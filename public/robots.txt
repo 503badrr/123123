@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /api/
+Disallow: /_authenticated/
+Disallow: /auth
+Disallow: /reset-password
+Disallow: /checkout
+Disallow: /success
+Disallow: /cart
+
+Sitemap: https://swwiitch.com/sitemap.xml

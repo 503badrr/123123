@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "release_id": "switch-unified-2026-08-01",
+  "status": "candidate_requires_external_gates",
+  "created_at": "2026-08-01T21:22:00Z",
+  "branch": "release/switch-unified-2026-08-01",
+  "coordinator": {
+    "repository": "503badrr/cosmic-switch-preview",
+    "prepared_through_commit": "e2889b4ff8a39321333f3a6cebc3a2d659d4e497"
+  },
+  "components": {
+    "storefront": {
+      "repository": "503badrr/cosmic-switch-preview",
+      "implementation_commit": "f2ef2cbc7b72fbdfb3f9e431cce59c8bf6b5a22b",
+      "role": "storefront_checkout_tap_and_supabase_migrations"
+    },
+    "r2_explorer": {
+      "repository": "503badrr/r2-explorer-template",
+      "commit": "52dfc38d9acc0d81433245c505853548be2bf085",
+      "role": "private_read_only_r2_operations"
+    },
+    "cloudflare_mcp": {
+      "repository": "503badrr/mcp-server-cloudflare",
+      "commit": "3bed1531acc01dc72febde3e42485f1d95e62cee",
+      "selected_app": "apps/workers-observability",
+      "role": "workers_logs_metrics_and_release_support"
+    }
+  },
+  "database": {
+    "production_project_ref": "slnjgmwckknzwjcmlolj",
+    "migration": "supabase/migrations/20260801205033_repair_admin_rls_and_webhook_indexes.sql",
+    "assertion_script": "supabase/tests/unified_release_rls.sql",
+    "applied_to_production": false
+  },
+  "verification": {
+    "tap_official_contract_reviewed": true,
+    "r2_typescript_passed": true,
+    "r2_preview_dry_run_passed": true,
+    "r2_production_dry_run_passed": true,
+    "mcp_dependency_rules_passed": 378,
+    "mcp_check_turbo_passed": "40/40",
+    "mcp_test_files_passed": "11/11",
+    "mcp_tests_passed": "119/119",
+    "mcp_observability_library_types_passed": true,
+    "mcp_workers_observability_types_passed": true,
+    "r2_github_actions": {
+      "status": "success",
+      "url": "https://github.com/503badrr/r2-explorer-template/actions/runs/30718158974"
+    },
+    "mcp_github_actions": {
+      "status": "success",
+      "url": "https://github.com/503badrr/mcp-server-cloudflare/actions/runs/30718909814"
+    },
+    "storefront_github_actions": {
+      "status": "requires_manual_review",
+      "reason": "Private-repository push checks are not exposed by the available workflow-run connector."
+    }
+  },
+  "blockers": [
+    "Storefront branch quality workflow result must be reviewed.",
+    "Vercel deployments are blocked by the connected account state.",
+    "The Supabase migration and assertions have not run on a development branch.",
+    "Cloudflare Access and the preview R2 bucket are not provisioned.",
+    "Switch-owned MCP OAuth and Cloudflare resources are not provisioned.",
+    "The unselected GraphQL app blocks the monorepo root pnpm types generator."
+  ],
+  "deployment": {
+    "merged_to_main": false,
+    "database_changed": false,
+    "workers_deployed": false,
+    "dns_changed": false
+  }
+}

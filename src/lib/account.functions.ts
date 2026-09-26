@@ -1,0 +1,76 @@
+import { createServerFn } from "@tanstack/react-start";
+import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { z } from "zod";
+
+type WalletTransaction = {
+  id: string;
+  amount: number;
+  kind: string;
+  note: string | null;
+  created_at: string;
+};
+
+type AccountNotification = {
+  id: string;
+  title: string;
+  body: string;
+  link: string | null;
+  read_at: string | null;
+  created_at: string;
+};
+
+export const getMyProfile = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const client = context.supabase as any;
+    const { data: profile } = await client
+      .from("profiles")
+      .select("id, full_name, email, phone, role, is_active")
+      .eq("id", context.userId)
+      .maybeSingle();
+
+    const safeProfile = profile ?? {
+      id: context.userId,
+      full_name: null,
+      email: null,
+      phone: null,
+      role: "customer",
+      is_active: true,
+    };
+
+    return {
+      profile: safeProfile,
+      roles: [safeProfile.role ?? "customer"],
+      wallet: { balance: 0, loyalty_points: 0 },
+    };
+  });
+
+export const updateMyProfile = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) =>
+    z
+      .object({
+        full_name: z.string().trim().min(2).max(80).optional(),
+        phone: z.string().trim().min(8).max(20).optional(),
+      })
+      .parse(d),
+  )
+  .handler(async ({ data, context }) => {
+    const client = context.supabase as any;
+    const { error } = await client
+      .from("profiles")
+      .upsert({ id: context.userId, ...data }, { onConflict: "id" });
+    if (error) {
+      console.error("[server] DB error:", error.message);
+      throw new Error("تعذر تحديث الملف الشخصي. حاول مرة أخرى.");
+    }
+    return { ok: true };
+  });
+
+export const getMyNotifications = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async (): Promise<AccountNotification[]> => []);
+
+export const getMyWalletTransactions = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async (): Promise<WalletTransaction[]> => []);

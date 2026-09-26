@@ -1,0 +1,35 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "dark-disk-4155",
+  "main": ".output/server/index.mjs",
+  "compatibility_date": "2026-08-02",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": false,
+  "preview_urls": true,
+  "assets": {
+    "directory": ".output/public",
+    "binding": "ASSETS"
+  },
+  "routes": [
+    {
+      "pattern": "swwiitch.com",
+      "custom_domain": true
+    },
+    {
+      "pattern": "www.swwiitch.com",
+      "custom_domain": true
+    }
+  ],
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 0.1
+  },
+  "vars": {
+    "ENVIRONMENT": "production",
+    "PAYMENT_PROVIDER": "tap",
+    "PUBLIC_SITE_URL": "https://swwiitch.com",
+    "SITE_URL": "https://swwiitch.com",
+    "SUPABASE_URL": "https://slnjgmwckknzwjcmlolj.supabase.co",
+    "SUPABASE_PUBLISHABLE_KEY": "sb_publishable_AgmfiyYzkVovCshLTSBEqA_SQ1e6jM3"
+  }
+}

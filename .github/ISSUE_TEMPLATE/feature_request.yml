@@ -1,0 +1,63 @@
+name: "✨ طلب ميزة — Feature Request"
+description: اقترح فكرة أو ميزة جديدة للمشروع
+title: "[Feat]: "
+labels: ["enhancement", "needs-triage"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        نرحب باقتراحاتك! يرجى وصف الميزة المطلوبة بوضوح حتى نتمكن من دراستها بشكل صحيح.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: المشكلة التي تحلها هذه الميزة
+      description: صف المشكلة الحالية أو الحاجة غير المُلباة.
+      placeholder: "أشعر بالإحباط عندما..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: الحل المقترح
+      description: وصف واضح للميزة التي تريد إضافتها.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: بدائل في الاعتبار
+      description: هل فكرت في حلول بديلة؟ صفها هنا.
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: الفئة
+      options:
+        - واجهة المستخدم (UI/UX)
+        - منتجات جديدة
+        - الدفع والمدفوعات
+        - لوحة الإدارة
+        - الأداء
+        - الأمان
+        - التوثيق
+        - أخرى
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: الأولوية المقترحة
+      options:
+        - منخفضة — تحسين اختياري
+        - متوسطة — مفيد للمستخدمين
+        - عالية — مهم لتجربة الاستخدام
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: سياق إضافي
+      description: أضف أي معلومات إضافية أو لقطات شاشة.
