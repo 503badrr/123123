@@ -39,7 +39,7 @@ jobs:
 
       - name: Upload typecheck diagnostics
         if: steps.typecheck.outputs.status != '0'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: typecheck-diagnostics
           path: typecheck.log
@@ -62,7 +62,7 @@ jobs:
 
       - name: Upload lint diagnostics
         if: steps.lint.outputs.status != '0'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: lint-diagnostics
           path: lint.log
