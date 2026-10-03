@@ -174,7 +174,7 @@ function AccountPage() {
                     <div className="mt-0.5 text-cyan-100/70">{n.body}</div>
                     <div className="mt-1 flex items-center justify-between gap-2 text-[11px] text-cyan-100/50">
                       <span>{new Date(n.created_at).toLocaleDateString("ar-SA")}</span>
-                      {n.link && <Link to={n.link} className="text-amber-200 hover:underline">عرض</Link>}
+                      {n.link && <a href={n.link} className="text-amber-200 hover:underline">عرض</a>}
                     </div>
                   </li>
                 ))}
