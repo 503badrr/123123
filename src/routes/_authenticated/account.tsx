@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Wallet, Award, ShoppingBag, Bell, LogOut, User, Crown } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { getMyNotifications, getMyProfile } from "@/lib/account.functions";
 
 export const Route = createFileRoute("/_authenticated/account")({
   head: () => ({ meta: [{ title: "حسابي | Switch" }] }),
@@ -72,6 +73,8 @@ function AccountPage() {
   const navigate = useNavigate();
   const profile = useQuery({ queryKey: ["me", "profile"], queryFn: getCurrentProfile });
   const orders = useQuery({ queryKey: ["me", "orders"], queryFn: getCurrentOrders });
+  const me = useQuery({ queryKey: ["me", "wallet"], queryFn: () => getMyProfile() });
+  const notifications = useQuery({ queryKey: ["me", "notifications"], queryFn: () => getMyNotifications() });
 
   async function logout() {
     await supabase.auth.signOut();
@@ -79,7 +82,7 @@ function AccountPage() {
     navigate({ to: "/auth" });
   }
 
-  const wallet = { balance: 0, loyalty_points: 0 };
+  const wallet = me.data?.wallet ?? { balance: 0, loyalty_points: 0 };
   const fullName = profile.data?.full_name ?? profile.data?.email ?? "مرحبًا بك";
   const isStaff = ["owner", "admin", "staff"].includes(profile.data?.role ?? "");
 
@@ -161,7 +164,22 @@ function AccountPage() {
 
           <aside className="rounded-3xl glass p-5">
             <div className="mb-3 flex items-center gap-2 text-sm font-black text-white"><Bell className="h-4 w-4" /> الإشعارات</div>
-            <p className="py-6 text-center text-xs text-cyan-100/60">لا توجد إشعارات</p>
+            {(notifications.data ?? []).length === 0 ? (
+              <p className="py-6 text-center text-xs text-cyan-100/60">لا توجد إشعارات</p>
+            ) : (
+              <ul className="divide-y divide-white/5">
+                {notifications.data!.slice(0, 10).map((n) => (
+                  <li key={n.id} className="py-3 text-xs">
+                    <div className="font-bold text-white">{n.title}</div>
+                    <div className="mt-0.5 text-cyan-100/70">{n.body}</div>
+                    <div className="mt-1 flex items-center justify-between gap-2 text-[11px] text-cyan-100/50">
+                      <span>{new Date(n.created_at).toLocaleDateString("ar-SA")}</span>
+                      {n.link && <a href={n.link} className="text-amber-200 hover:underline">عرض</a>}
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
           </aside>
         </section>
       </div>

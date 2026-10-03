@@ -14,25 +14,46 @@ export const getAdminOverview = createServerFn({ method: "GET" })
     await assertStaff(context);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const db = supabaseAdmin as any;
-    const [orders, codes, products, users] = await Promise.all([
-      db.from("orders").select("id, total, status, created_at"),
-      db.from("digital_codes").select("status"),
-      db.from("products").select("id, is_active"),
-      db.from("profiles").select("id"),
+    const countOf = async (query: PromiseLike<{ count: number | null }>): Promise<number> =>
+      (await query).count ?? 0;
+    const codeStatuses = ["available", "reserved", "delivered", "disabled"] as const;
+
+    // Count with head requests: selecting rows is silently capped at 1000 by PostgREST.
+    const [ordersCount, activeProducts, usersCount, recent, ...codeCounts] = await Promise.all([
+      countOf(db.from("orders").select("id", { count: "exact", head: true })),
+      countOf(db.from("products").select("id", { count: "exact", head: true }).eq("is_active", true)),
+      countOf(db.from("profiles").select("id", { count: "exact", head: true })),
+      db
+        .from("orders")
+        .select("id, total, status, created_at")
+        .order("created_at", { ascending: false })
+        .limit(10),
+      ...codeStatuses.map((status) =>
+        countOf(db.from("digital_codes").select("id", { count: "exact", head: true }).eq("status", status)),
+      ),
     ]);
-    const o = orders.data ?? [];
-    const revenue = o.filter((x: any) => x.status === "fulfilled" || x.status === "paid").reduce((s: number, x: any) => s + Number(x.total), 0);
-    const codesByStatus = (codes.data ?? []).reduce(
-      (m: Record<string, number>, c: any) => ((m[c.status] = (m[c.status] ?? 0) + 1), m),
-      {} as Record<string, number>,
-    );
+
+    let revenue = 0;
+    const pageSize = 1000;
+    for (let from = 0; ; from += pageSize) {
+      const { data: page } = await db
+        .from("orders")
+        .select("total")
+        .in("status", ["paid", "fulfilled"])
+        .order("created_at", { ascending: true })
+        .range(from, from + pageSize - 1);
+      const rows = (page ?? []) as Array<{ total: number | string }>;
+      revenue += rows.reduce((sum, row) => sum + Number(row.total), 0);
+      if (rows.length < pageSize) break;
+    }
+
     return {
-      orders_count: o.length,
+      orders_count: ordersCount,
       revenue,
-      active_products: (products.data ?? []).filter((p: any) => p.is_active).length,
-      users_count: users.data?.length ?? 0,
-      codes: codesByStatus,
-      recent_orders: o.slice(-10).reverse(),
+      active_products: activeProducts,
+      users_count: usersCount,
+      codes: Object.fromEntries(codeStatuses.map((status, i) => [status, codeCounts[i]])) as Record<string, number>,
+      recent_orders: recent.data ?? [],
     };
   });
 
