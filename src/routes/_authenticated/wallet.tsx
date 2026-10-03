@@ -9,7 +9,7 @@ export const Route = createFileRoute("/_authenticated/wallet")({
 });
 
 function WalletPage() {
-  const profile = useQuery({ queryKey: ["me", "profile"], queryFn: () => getMyProfile() });
+  const profile = useQuery({ queryKey: ["me", "wallet"], queryFn: () => getMyProfile() });
   const tx = useQuery({ queryKey: ["me", "wallet_tx"], queryFn: () => getMyWalletTransactions() });
   const w = profile.data?.wallet ?? { balance: 0, loyalty_points: 0 };
 

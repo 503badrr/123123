@@ -45,12 +45,18 @@ grant select, insert, update, delete on table public.wallet_transactions to serv
 drop policy if exists wallets_select_own_or_admin on public.wallets;
 create policy wallets_select_own_or_admin on public.wallets
   for select to authenticated
-  using ((select auth.uid()) = user_id or (select private.is_admin()));
+  using (
+    coalesce(((select auth.jwt()) ->> 'is_anonymous')::boolean, false) is false
+    and ((select auth.uid()) = user_id or (select private.is_admin()))
+  );
 
 drop policy if exists wallet_transactions_select_own_or_admin on public.wallet_transactions;
 create policy wallet_transactions_select_own_or_admin on public.wallet_transactions
   for select to authenticated
-  using ((select auth.uid()) = user_id or (select private.is_admin()));
+  using (
+    coalesce(((select auth.jwt()) ->> 'is_anonymous')::boolean, false) is false
+    and ((select auth.uid()) = user_id or (select private.is_admin()))
+  );
 
 drop trigger if exists set_wallets_updated_at on public.wallets;
 create trigger set_wallets_updated_at
