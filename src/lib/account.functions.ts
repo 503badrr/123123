@@ -29,6 +29,12 @@ export const getMyProfile = createServerFn({ method: "GET" })
       .eq("id", context.userId)
       .maybeSingle();
 
+    const { data: wallet } = await client
+      .from("wallets")
+      .select("balance, loyalty_points")
+      .eq("user_id", context.userId)
+      .maybeSingle();
+
     const safeProfile = profile ?? {
       id: context.userId,
       full_name: null,
@@ -41,7 +47,10 @@ export const getMyProfile = createServerFn({ method: "GET" })
     return {
       profile: safeProfile,
       roles: [safeProfile.role ?? "customer"],
-      wallet: { balance: 0, loyalty_points: 0 },
+      wallet: {
+        balance: Number(wallet?.balance ?? 0),
+        loyalty_points: Number(wallet?.loyalty_points ?? 0),
+      },
     };
   });
 
@@ -86,4 +95,17 @@ export const getMyNotifications = createServerFn({ method: "GET" })
 
 export const getMyWalletTransactions = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .handler(async (): Promise<WalletTransaction[]> => []);
+  .handler(async ({ context }): Promise<WalletTransaction[]> => {
+    const client = context.supabase as any;
+    const { data, error } = await client
+      .from("wallet_transactions")
+      .select("id, amount, kind, note, created_at")
+      .eq("user_id", context.userId)
+      .order("created_at", { ascending: false })
+      .limit(100);
+    if (error) {
+      console.error("[server] DB error:", error.message);
+      return [];
+    }
+    return data ?? [];
+  });

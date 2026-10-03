@@ -46,6 +46,7 @@ import { Route as ApiHealthRouteImport } from './routes/api/health'
 import { Route as ApiReadinessRouteImport } from './routes/api/readiness'
 import { Route as ItemIdRouteImport } from './routes/item.$id'
 import { Route as ApiShopifyGraphqlRouteImport } from './routes/api/shopify/graphql'
+import { Route as ApiZidWebhooksRouteImport } from './routes/api/zid/webhooks'
 import { Route as ApiPublicWebhooksHyperpayRouteImport } from './routes/api/public/webhooks/hyperpay'
 import { Route as ApiPublicWebhooksMoyasarRouteImport } from './routes/api/public/webhooks/moyasar'
 import { Route as ApiPublicWebhooksTapRouteImport } from './routes/api/public/webhooks/tap'
@@ -235,6 +236,11 @@ const ApiShopifyGraphqlRoute = ApiShopifyGraphqlRouteImport.update({
   path: '/api/shopify/graphql',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiZidWebhooksRoute = ApiZidWebhooksRouteImport.update({
+  id: '/api/zid/webhooks',
+  path: '/api/zid/webhooks',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicWebhooksHyperpayRoute =
   ApiPublicWebhooksHyperpayRouteImport.update({
     id: '/api/public/webhooks/hyperpay',
@@ -295,6 +301,7 @@ export interface FileRoutesByFullPath {
   '/item/$id': typeof ItemIdRoute
   '/admin/': typeof AdminIndexRoute
   '/api/shopify/graphql': typeof ApiShopifyGraphqlRoute
+  '/api/zid/webhooks': typeof ApiZidWebhooksRoute
   '/api/public/webhooks/hyperpay': typeof ApiPublicWebhooksHyperpayRoute
   '/api/public/webhooks/moyasar': typeof ApiPublicWebhooksMoyasarRoute
   '/api/public/webhooks/tap': typeof ApiPublicWebhooksTapRoute
@@ -336,6 +343,7 @@ export interface FileRoutesByTo {
   '/item/$id': typeof ItemIdRoute
   '/admin': typeof AdminIndexRoute
   '/api/shopify/graphql': typeof ApiShopifyGraphqlRoute
+  '/api/zid/webhooks': typeof ApiZidWebhooksRoute
   '/api/public/webhooks/hyperpay': typeof ApiPublicWebhooksHyperpayRoute
   '/api/public/webhooks/moyasar': typeof ApiPublicWebhooksMoyasarRoute
   '/api/public/webhooks/tap': typeof ApiPublicWebhooksTapRoute
@@ -380,6 +388,7 @@ export interface FileRoutesById {
   '/item/$id': typeof ItemIdRoute
   '/admin/': typeof AdminIndexRoute
   '/api/shopify/graphql': typeof ApiShopifyGraphqlRoute
+  '/api/zid/webhooks': typeof ApiZidWebhooksRoute
   '/api/public/webhooks/hyperpay': typeof ApiPublicWebhooksHyperpayRoute
   '/api/public/webhooks/moyasar': typeof ApiPublicWebhooksMoyasarRoute
   '/api/public/webhooks/tap': typeof ApiPublicWebhooksTapRoute
@@ -424,6 +433,7 @@ export interface FileRouteTypes {
     | '/item/$id'
     | '/admin/'
     | '/api/shopify/graphql'
+    | '/api/zid/webhooks'
     | '/api/public/webhooks/hyperpay'
     | '/api/public/webhooks/moyasar'
     | '/api/public/webhooks/tap'
@@ -465,6 +475,7 @@ export interface FileRouteTypes {
     | '/item/$id'
     | '/admin'
     | '/api/shopify/graphql'
+    | '/api/zid/webhooks'
     | '/api/public/webhooks/hyperpay'
     | '/api/public/webhooks/moyasar'
     | '/api/public/webhooks/tap'
@@ -508,6 +519,7 @@ export interface FileRouteTypes {
     | '/item/$id'
     | '/admin/'
     | '/api/shopify/graphql'
+    | '/api/zid/webhooks'
     | '/api/public/webhooks/hyperpay'
     | '/api/public/webhooks/moyasar'
     | '/api/public/webhooks/tap'
@@ -541,6 +553,7 @@ export interface RootRouteChildren {
   ApiReadinessRoute: typeof ApiReadinessRoute
   ItemIdRoute: typeof ItemIdRoute
   ApiShopifyGraphqlRoute: typeof ApiShopifyGraphqlRoute
+  ApiZidWebhooksRoute: typeof ApiZidWebhooksRoute
   ApiPublicWebhooksHyperpayRoute: typeof ApiPublicWebhooksHyperpayRoute
   ApiPublicWebhooksMoyasarRoute: typeof ApiPublicWebhooksMoyasarRoute
   ApiPublicWebhooksTapRoute: typeof ApiPublicWebhooksTapRoute
@@ -808,6 +821,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiShopifyGraphqlRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/zid/webhooks': {
+      id: '/api/zid/webhooks'
+      path: '/api/zid/webhooks'
+      fullPath: '/api/zid/webhooks'
+      preLoaderRoute: typeof ApiZidWebhooksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/webhooks/hyperpay': {
       id: '/api/public/webhooks/hyperpay'
       path: '/api/public/webhooks/hyperpay'
@@ -905,6 +925,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiReadinessRoute: ApiReadinessRoute,
   ItemIdRoute: ItemIdRoute,
   ApiShopifyGraphqlRoute: ApiShopifyGraphqlRoute,
+  ApiZidWebhooksRoute: ApiZidWebhooksRoute,
   ApiPublicWebhooksHyperpayRoute: ApiPublicWebhooksHyperpayRoute,
   ApiPublicWebhooksMoyasarRoute: ApiPublicWebhooksMoyasarRoute,
   ApiPublicWebhooksTapRoute: ApiPublicWebhooksTapRoute,
