@@ -69,7 +69,20 @@ export const updateMyProfile = createServerFn({ method: "POST" })
 
 export const getMyNotifications = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .handler(async (): Promise<AccountNotification[]> => []);
+  .handler(async ({ context }): Promise<AccountNotification[]> => {
+    const client = context.supabase as any;
+    const { data, error } = await client
+      .from("notifications")
+      .select("id, title, body, link, read_at, created_at")
+      .eq("user_id", context.userId)
+      .order("created_at", { ascending: false })
+      .limit(50);
+    if (error) {
+      console.error("[server] DB error:", error.message);
+      return [];
+    }
+    return data ?? [];
+  });
 
 export const getMyWalletTransactions = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])

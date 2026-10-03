@@ -52,7 +52,7 @@ export const moyasar: PaymentProvider = {
         currency: input.currency,
         description: input.description,
         success_url: input.callbackUrl,
-        back_url: "https://swwiitch.com/checkout",
+        back_url: new URL("/checkout", input.callbackUrl).toString(),
         metadata: { order_id: input.orderId, order_number: input.orderNumber },
       }),
     });
